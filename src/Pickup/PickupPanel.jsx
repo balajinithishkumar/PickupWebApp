@@ -5,8 +5,8 @@ import { auth } from "../firebase";
 import PickupCompletedTab from "./PickupCompletedTab"; // Assuming PickupCompletedTab is used for completed Pickup data
 import PickupPersonTab from "./PickupPersonTab";
 // import "./PickupPanel.css"; // Add your CSS file for styling
-
-const API_URL = "https://sheet.best/api/sheets/27658b60-3dca-4cc2-bd34-f65124b8a27d";
+import apiURL from "../utility/GooglesheetAPI/apiURLs.js"
+const API_URL = apiURL.sheetDB
 
 function PickupPanel() {
   const navigate = useNavigate();

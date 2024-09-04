@@ -47,9 +47,9 @@ const PaymentPendingTab = ({
             </div>
             <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">Destination:</span>
-              <span className="text-gray-700">{user.DESTINATION || ""}</span>
+              <span className="text-gray-700 max-w-[60%]">{user.DESTINATION || ""}</span>
             </div>
-            <div className="flex justify-between mb-2">
+            {/* <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">Coordinates:</span>
               <button
                 className="bg-purple-500 text-white px-2 py-1 rounded"
@@ -60,7 +60,7 @@ const PaymentPendingTab = ({
               >
                 View on Map
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       ))}

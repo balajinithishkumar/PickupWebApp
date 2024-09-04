@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-const API_URL =
-  "https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1";
+import apiURL from "../utility/GooglesheetAPI/apiURLs.js"
+const SHEETY_API_URL = apiURL.sheety
 
 const PickupCompleted = () => {
   const [details, setDetails] = useState(null);
@@ -31,7 +30,7 @@ const PickupCompleted = () => {
     if (userName) {
       const fetchDetails = async () => {
         try {
-          const result = await axios.get(API_URL);
+          const result = await axios.get(SHEETY_API_URL);
           // Find the details with status 'OUTGOING MANIFEST'
           const completedDetails = result.data.sheet1.filter(
             (item) => item.pickUpPersonNameStatus === "PICKUP COMPLETED" && item.pickUpPersonName === userName
@@ -116,7 +115,7 @@ const PickupCompleted = () => {
               </div>
               <div className="flex gap-3">
                 <span className="font-medium text-gray-600">
-                  Post Number of Packages:
+                  Post Number of Boxes:
                 </span>
                 <span className="text-gray-800">
                   {detail.postNumberOfPackages || "-"}

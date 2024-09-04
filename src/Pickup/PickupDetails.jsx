@@ -4,7 +4,8 @@ import axios from "axios";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-const API_URL = "https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1";
+const API_URL =
+  "https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1";
 
 const PickupDetails = () => {
   const { awbnumber } = useParams();
@@ -12,13 +13,14 @@ const PickupDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [pickupWeight, setPickupWeight] = useState("");
-  const [numberOfPackages, setNumberOfPackages] = useState("");
+  const [numberOfPackages, setNumberOfPackages] = useState(1);
   const [productImages, setProductImages] = useState([]);
   const [packageWeightImages, setPackageWeightImages] = useState([]);
   const [formImages, setFormImages] = useState([]);
   const [inputKey, setInputKey] = useState(Date.now());
   const [formError, setFormError] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const PickupDetails = () => {
         );
         setDetails(userDetails);
         setPickupWeight(userDetails?.pickupWeight || "");
-        setNumberOfPackages(userDetails?.numberOfPackages || "");
+        setNumberOfPackages(userDetails?.numberOfPackages || 1);
       } catch (error) {
         handleError(error);
       } finally {
@@ -82,6 +84,16 @@ const PickupDetails = () => {
     return true;
   };
 
+  function PickupCompletedDate() {
+    const now = new Date();
+    // Convert to IST by adjusting the time zone offset
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC + 5:30
+    const istTime = new Date(now.getTime() + istOffset);
+    const date = istTime.toLocaleDateString("en-IN"); // Format: DD/MM/YYYY
+    const time = istTime.toLocaleTimeString("en-IN", { hour12: true }); // Format: HH:MM:SS AM/PM
+    return date + "&" + time;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return;
@@ -94,10 +106,14 @@ const PickupDetails = () => {
       }
 
       const productImageUrls = await Promise.all(
-        productImages.map((file) => uploadFileToFirebase(file, "PRODUCT IMAGES"))
+        productImages.map((file) =>
+          uploadFileToFirebase(file, "PRODUCT IMAGES")
+        )
       );
       const packageWeightImageUrls = await Promise.all(
-        packageWeightImages.map((file) => uploadFileToFirebase(file, "PACKAGE WEIGHT"))
+        packageWeightImages.map((file) =>
+          uploadFileToFirebase(file, "PACKAGE WEIGHT")
+        )
       );
       const formImageUrls = await Promise.all(
         formImages.map((file) => uploadFileToFirebase(file, "FORM IMAGES"))
@@ -108,14 +124,16 @@ const PickupDetails = () => {
           postPickupWeight: `${pickupWeight} KG`,
           postNumberOfPackages: numberOfPackages,
           status: "INCOMING MANIFEST",
-          pickUpPersonNameStatus:"PICKUP COMPLETED", 
+          pickUpPersonNameStatus: "PICKUP COMPLETED",
           PRODUCTSIMAGE: productImageUrls.join(", "),
           PACKAGEWEIGHTIMAGES: packageWeightImageUrls.join(", "),
           FORMIMAGES: formImageUrls.join(", "),
+          pickupCompletedDatatime: PickupCompletedDate(),
         },
       });
 
       navigate("/home");
+      
     } catch (error) {
       handleError(error);
     } finally {
@@ -126,7 +144,11 @@ const PickupDetails = () => {
 
   const handleError = (error) => {
     if (error.response) {
-      setError(`Error ${error.response.status}: ${error.response.data.message || error.message}`);
+      setError(
+        `Error ${error.response.status}: ${
+          error.response.data.message || error.message
+        }`
+      );
     } else if (error.request) {
       setError("Network error. Please check your connection.");
     } else {
@@ -160,11 +182,23 @@ const PickupDetails = () => {
     return <div className="text-red-500 text-center p-4">{error}</div>;
   }
 
+  const incrementPackages = () => {
+    setNumberOfPackages((prev) => prev + 1);
+  };
+
+  const decrementPackages = () => {
+    if (numberOfPackages > 1) {
+      setNumberOfPackages((prev) => prev - 1);
+    }
+  };
+
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white shadow-md rounded-lg">
       {details ? (
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800 mb-4">Pickup Details</h1>
+          <h1 className="text-3xl font-semibold text-gray-800 mb-4">
+            Pickup Details
+          </h1>
           <div className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex gap-3">
@@ -188,20 +222,32 @@ const PickupDetails = () => {
                 <span className="text-gray-800">{details.phoneNumber}</span>
               </div>
               <div className="flex gap-3">
-                <span className="font-medium text-gray-600">Pickup DateTime:</span>
+                <span className="font-medium text-gray-600">
+                  Pickup DateTime:
+                </span>
                 <span className="text-gray-800">{details.pickupDatetime}</span>
               </div>
               <div className="flex gap-3">
                 <span className="font-medium text-gray-600">Pickup Inst:</span>
-                <span className="text-gray-800">{details.pickupInstructions || "-"}</span>
+                <span className="text-gray-800">
+                  {details.pickupInstructions || "-"}
+                </span>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Update Details</h2>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-gray-50 p-4 rounded-lg shadow-sm"
+          >
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Update Details
+            </h2>
             <div className="flex flex-col mb-4">
-              <label htmlFor="pickupWeight" className="text-gray-700 font-medium mb-1">
+              <label
+                htmlFor="pickupWeight"
+                className="text-gray-700 font-medium mb-1"
+              >
                 Pickup Weight (KG):
               </label>
               <input
@@ -214,17 +260,40 @@ const PickupDetails = () => {
               />
             </div>
             <div className="flex flex-col mb-4">
-              <label htmlFor="numberOfPackages" className="text-gray-700 font-medium mb-1">
-                Number of Packages:
+              <label
+                htmlFor="numberOfPackages"
+                className="text-gray-700 font-medium mb-1"
+              >
+                Number of Boxes:
               </label>
-              <input
-                type="text"
-                id="numberOfPackages"
-                value={numberOfPackages}
-                placeholder="Enter Number of Packages"
-                onChange={(e) => setNumberOfPackages(e.target.value)}
-                className="p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
-              />
+              <div className="flex items-center space-x-3">
+                <button
+                  type="button"
+                  onClick={decrementPackages}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l"
+                >
+                  -
+                </button>
+                <input
+                  type="text"
+                  id="numberOfPackages"
+                  value={numberOfPackages}
+                  onChange={(e) =>
+                    setNumberOfPackages(
+                      Math.max(1, parseInt(e.target.value, 10))
+                    )
+                  }
+                  className="p-2 border border-gray-300 text-center w-20"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={incrementPackages}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-r"
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             <FileInput
@@ -272,13 +341,23 @@ const PickupDetails = () => {
           </form>
         </div>
       ) : (
-        <div className="text-center text-gray-500">No details found for the given AWB number.</div>
+        <div className="text-center text-gray-500">
+          No details found for the given AWB number.
+        </div>
       )}
     </div>
   );
 };
 
-const FileInput = ({ label, accept, files, setFiles, maxFiles, handleFileChange, handleRemoveFile }) => {
+const FileInput = ({
+  label,
+  accept,
+  files,
+  setFiles,
+  maxFiles,
+  handleFileChange,
+  handleRemoveFile,
+}) => {
   return (
     <div className="flex flex-col mb-4">
       <label className="text-gray-700 font-medium mb-1">{label}:</label>

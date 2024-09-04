@@ -7,6 +7,7 @@ const OutgoingManifestTab = ({
   handleOpenMap,
   pickupPersons = [],
 }) => {
+  
   const navigate = useNavigate();
 
   const handleCardClick = (user) => {
@@ -61,7 +62,7 @@ const OutgoingManifestTab = ({
               <span className="text-gray-700">{user.DESTINATION || ""}</span>
             </div>
             <div className="flex justify-between mb-2">
-              <span className="font-semibold text-gray-800">Post Pickup Packages:</span>
+              <span className="font-semibold text-gray-800">Post Pickup Boxes:</span>
               <span className="text-gray-700">{user.POST_NUMBER_OF_PACKAGES || ""}</span>
             </div>
             <div className="flex justify-between mb-2">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -8,11 +8,10 @@ import PaymentDoneTab from "./PaymentDoneTab";
 import PaymentPendingTab from "./PaymentPendingTab";
 import "./AdminPanel.css"
 import Nav from "../Nav";
+import apiURLs from "../utility/GooglesheetAPI/apiURLs";
 
-const API_URL =
-  "https://sheet.best/api/sheets/27658b60-3dca-4cc2-bd34-f65124b8a27d";
-const SHEETDB_API_URL =
-  "https://api.sheety.co/ae021e3452f9692ed18653ea7a2c7526/pickupdata/sheet1";
+const API_URL = apiURLs.sheetDB;
+const sheetyDB_API_URL = apiURLs.sheety;
 
 function AdminPanel() {
   const navigate = useNavigate();
@@ -55,6 +54,7 @@ function AdminPanel() {
   }, []);
 
   // Fetch user data from API
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -98,7 +98,7 @@ function AdminPanel() {
   // Update pickup person with retry logic
   const getRowIdByAwbNumber = async (awbNumber) => {
     try {
-      const response = await axios.get('https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1');
+      const response = await axios.get(sheetyDB_API_URL);
       const rows = response.data.sheet1;
       const row = rows.find(row => row.awbNumber === awbNumber);
       return row ? row.id : null;
@@ -119,7 +119,7 @@ function AdminPanel() {
   
       const options = {
         method: 'PUT',
-        url: `https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1/${rowId}`, // Use dynamic row ID
+        url: `${sheetyDB_API_URL}/${rowId}`, // Use dynamic row ID
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',

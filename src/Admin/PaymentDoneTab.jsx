@@ -9,11 +9,10 @@ const PaymentDoneTab = ({
 }) => {
   if (!Array.isArray(userData) || userData.length === 0) {
     return (
-      <div className="text-center text-gray-500 p-4">
-        No data available.
-      </div>
+      <div className="text-center text-gray-500 p-4">No data available.</div>
     );
   }
+
 
   return (
     <div>
@@ -25,7 +24,19 @@ const PaymentDoneTab = ({
         >
           <div className="mb-4">
             <div
-              className={`bg-${user.STATUS === "PENDING" ? "red" : user.STATUS === "COMPLETED" ? "green" : "gray"}-200 p-2 rounded text-${user.STATUS === "PENDING" ? "red" : user.STATUS === "COMPLETED" ? "green" : "gray"}-800`}
+              className={`bg-${
+                user.STATUS === "PENDING"
+                  ? "red"
+                  : user.STATUS === "COMPLETED"
+                  ? "green"
+                  : "gray"
+              }-200 p-2 rounded text-${
+                user.STATUS === "PENDING"
+                  ? "red"
+                  : user.STATUS === "COMPLETED"
+                  ? "green"
+                  : "gray"
+              }-800`}
             >
               {user.STATUS}
             </div>
@@ -41,7 +52,7 @@ const PaymentDoneTab = ({
               <span className="font-semibold text-gray-800">Destination:</span>
               <span className="text-gray-700">{user.DESTINATION || ""}</span>
             </div>
-            <div className="flex justify-between mb-2">
+            {/* <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">Coordinates:</span>
               <button
                 className="bg-purple-500 text-white px-2 py-1 rounded"
@@ -52,7 +63,7 @@ const PaymentDoneTab = ({
               >
                 View on Map
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       ))}
