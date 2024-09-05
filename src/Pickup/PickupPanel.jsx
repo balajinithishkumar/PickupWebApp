@@ -1,12 +1,12 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import PickupCompletedTab from "./PickupCompletedTab"; // Assuming PickupCompletedTab is used for completed Pickup data
 import PickupPersonTab from "./PickupPersonTab";
-// import "./PickupPanel.css"; // Add your CSS file for styling
-import apiURL from "../utility/GooglesheetAPI/apiURLs.js"
-const API_URL = apiURL.sheetDB
+import apiURL from "../utility/GooglesheetAPI/apiURLs.js";
+
+const API_URL = apiURL.sheetDB;
 
 function PickupPanel() {
   const navigate = useNavigate();
@@ -47,6 +47,7 @@ function PickupPanel() {
     };
     fetchUserRole();
   }, []);
+
   // Fetch user data from API
   useEffect(() => {
     const fetchData = async () => {
@@ -55,9 +56,6 @@ function PickupPanel() {
         const result = await axios.get(API_URL);
         const filteredData = result.data.filter((item) => item.STATUS === "RUN SHEET" && item.PickUpPersonName === userName);
         setUserData(filteredData);
-
-console.log(userName)
-
         await fetchAssignments(); // Fetch assignments after user data is loaded
       } catch (error) {
         if (error.response) {
@@ -255,17 +253,17 @@ console.log(userName)
       <div className="p-4">
         <nav className="flex justify-center mt-4">
           <ul className="flex space-x-2">
-            {[...Array(Math.ceil(getFilteredData().length / itemsPerPage)).keys()].map((number) => (
-              <li key={number}>
+            {Array.from({ length: Math.ceil(getFilteredData().length / itemsPerPage) }).map((_, index) => (
+              <li key={index}>
                 <button
-                  className={`px-4 py-2 rounded ${
-                    currentPage === number + 1
+                  className={`py-2 px-4 rounded ${
+                    currentPage === index + 1
                       ? "bg-purple-600 text-white"
                       : "bg-gray-200 text-gray-700"
                   }`}
-                  onClick={() => handlePageChange(number + 1)}
+                  onClick={() => handlePageChange(index + 1)}
                 >
-                  {number + 1}
+                  {index + 1}
                 </button>
               </li>
             ))}

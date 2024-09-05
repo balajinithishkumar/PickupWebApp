@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import apiURLs from "../utility/GooglesheetAPI/apiURLs";
 
-const API_URL =
-  "https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1";
+const API_URL = apiURLs.sheety;
 
 const PickupDetails = () => {
   const { awbnumber } = useParams();

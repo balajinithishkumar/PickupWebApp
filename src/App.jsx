@@ -5,7 +5,7 @@ import Home from "./Home";
 import DetailScreen from "./Admin/DetailScreen"; // Import your DetailScreen component
 import PickupDetails from "./Pickup/PickupDetails";
 import ClientDetails from "./Admin/ClientDetails";
-
+import ImageGallery from "./ImageGallery"
 function App() {
   const [user, setUser] = useState(null); // State to hold the current user
   const navigate = useNavigate(); // Hook to navigate programmatically
@@ -39,6 +39,7 @@ function App() {
       <Route path="/ClientDetails" element={<ClientDetails />} />
       <Route path="/details/:awbNumber" element={<DetailScreen />} />
       <Route path="/PickupDetails/:awbnumber" element={<PickupDetails />} />
+      <Route path="/images/:awbNumber" element={<ImageGallery />} />
     </Routes>
   );
 }

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
+import apiURLs from "../utility/GooglesheetAPI/apiURLs";
 
-const API_URL =
-  "https://api.sheety.co/640e082a79d3df233e63beab005a0906/pickupdata/sheet1";
+const API_URL = apiURLs.sheety;
 
 const fetchRowByAWB = async (awbNumber) => {
   try {
@@ -41,8 +41,7 @@ const updateRowByID = async (rowId, updatedFields) => {
     }
 
     const data = await response.json();
-    console.log(data);
-    console.log("Row updated successfully");
+    console.log("Row updated successfully:", data);
   } catch (error) {
     console.error("Error updating row:", error);
   }
@@ -55,6 +54,7 @@ function DetailScreen() {
   const [user, setUser] = useState(null);
   const [actualWeight, setActualWeight] = useState("");
   const [actualNumPackages, setActualNumPackages] = useState("");
+  const [rtoIfAny, setRtoIfAny] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -75,12 +75,15 @@ function DetailScreen() {
         actualWeight: actualWeight + "KG",
         actualNoOfPackages: actualNumPackages,
         status: "PAYMENT PENDING",
+        rtoifany: rtoIfAny,  // Include the RTO field in the update
       };
 
       await updateRowByID(user.id, details);
 
+      // Reset form fields after submission
       setActualWeight("");
       setActualNumPackages("");
+      setRtoIfAny("");
 
       navigate("/Home");
     } else {
@@ -135,7 +138,7 @@ function DetailScreen() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block text-sm text-gray-600 mb-2">
             Actual Number of Packages:
           </label>
@@ -144,6 +147,18 @@ function DetailScreen() {
             value={actualNumPackages}
             onChange={(e) => setActualNumPackages(e.target.value)}
             placeholder="Enter number of packages"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm text-gray-600 mb-2">
+            RTO (if any):
+          </label>
+          <input
+            type="text"
+            value={rtoIfAny}
+            onChange={(e) => setRtoIfAny(e.target.value)}
+            placeholder="Enter RTO details"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm"
           />
         </div>

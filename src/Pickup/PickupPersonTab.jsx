@@ -7,7 +7,7 @@ const PickupPersonTab = ({
   handleOpenMap,
   pickupPersons,
 }) => {
-  
+
   const navigate = useNavigate();
 
   const handleCardClick = (awbNumber) => {
@@ -17,6 +17,11 @@ const PickupPersonTab = ({
   const handleMapClick = (event, latitude, longitude) => {
     event.stopPropagation(); // Prevent the card click event from firing
     handleOpenMap(latitude, longitude);
+  };
+
+  const handleCallClick = (event, phoneNumber) => {
+    event.stopPropagation(); // Prevent the card click event from firing
+    window.location.href = `tel:${phoneNumber}`;
   };
 
   return (
@@ -81,6 +86,15 @@ const PickupPersonTab = ({
                   onClick={(e) => handleMapClick(e, user.LATITUDE, user.LONGITUDE)}
                 >
                   View on Map
+                </button>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold text-gray-800">Action:</span>
+                <button
+                  className="bg-purple-500 text-white px-2 py-1 rounded"
+                  onClick={(e) => handleCallClick(e, user.PHONENUMBER)}
+                >
+                  Call
                 </button>
               </div>
             </div>

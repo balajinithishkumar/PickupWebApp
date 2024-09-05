@@ -39,7 +39,7 @@ const PickupCards = ({ users, onCardClick, onAssignmentChange, pickupPersons, on
             <div className="flex justify-between mb-2">
               <span className="font-semibold text-gray-800">Coordinates:</span>
               <button
-                className="bg-blue-500 text-white px-2 py-1 rounded"
+                className="bg-purple-500 text-white px-2 py-1 rounded"
                 onClick={() => onOpenMap(user.LATITUDE, user.LONGITUDE)}
               >
                 View on Map

@@ -156,6 +156,7 @@ function AdminPanel() {
     const selectedUser = userData[index];
     const awbNumber = selectedUser.AWB_NUMBER;
     await updatePickUpPersonWithRetry(awbNumber, value);
+    window.location.reload(); 
   };
 
   // Navigate to user detail page
