@@ -10,7 +10,7 @@ const fetchRowByAWB = async (awbNumber) => {
   try {
     const response = await axios.get(API_URL);
     const allUsers = response.data.sheet1;
-    const matchedUser = allUsers.find((user) => user.awbNumber === awbNumber);
+    const matchedUser = allUsers.find((user) => user.awbNumber == awbNumber);
     return matchedUser;
   } catch (error) {
     console.error("Error fetching row by AWB number:", error);

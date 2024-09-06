@@ -28,8 +28,9 @@ const PickupDetails = () => {
       try {
         const result = await axios.get(API_URL);
         const userDetails = result.data.sheet1.find(
-          (item) => item.status === "RUN SHEET" && item.awbNumber === awbnumber
+          (item) => item.status === "RUN SHEET" && item.awbNumber == awbnumber
         );
+        console.log(userDetails,awbnumber)
         setDetails(userDetails);
         setPickupWeight(userDetails?.pickupWeight || "");
         setNumberOfPackages(userDetails?.numberOfPackages || 1);

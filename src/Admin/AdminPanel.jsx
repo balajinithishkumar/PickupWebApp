@@ -100,7 +100,10 @@ function AdminPanel() {
     try {
       const response = await axios.get(sheetyDB_API_URL);
       const rows = response.data.sheet1;
-      const row = rows.find(row => row.awbNumber === awbNumber);
+      console.log(typeof awbNumber)
+      console.log(rows)
+      const row = rows.find(row => row.awbNumber == awbNumber);
+      console.log(row)
       return row ? row.id : null;
     } catch (error) {
       console.error('Error fetching row ID:', error);
@@ -111,6 +114,7 @@ function AdminPanel() {
   const updatePickUpPersonWithRetry = async (awbNumber, pickUpPerson, retryCount = 0) => {
     try {
       const rowId = await getRowIdByAwbNumber(awbNumber);
+      console.log(rowId)
   
       if (!rowId) {
         console.error('Row not found for AWB number:', awbNumber);
@@ -133,6 +137,7 @@ function AdminPanel() {
   
       const response = await axios.request(options);
       console.log("PickUpPersonName updated successfully:", response.data);
+
       await fetchAssignments(); // Refresh assignments after update
     } catch (error) {
       if (error.response && error.response.status === 429 && retryCount < 3) {
